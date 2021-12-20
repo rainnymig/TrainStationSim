@@ -1,0 +1,5 @@
+[requires]
+rapidjson/cci.20211112
+
+[generators]
+cmake

@@ -1,0 +1,60 @@
+{
+  "version": "0.0.1",
+  "trains": [
+    {
+      "id": 1,
+      "arrivalTime": 180,
+      "departureTime": 184,
+      "platform": 1,
+      "wagonCount": 6,
+      "passengerCount": 120,
+      "powerType": "EMU",
+      "operationType": "R",
+      "boardingSpeed": 80
+    },
+    {
+      "id": 2,
+      "arrivalTime": 180,
+      "departureTime": 184,
+      "platform": 2,
+      "wagonCount": 6,
+      "passengerCount": 120,
+      "powerType": "EMU",
+      "operationType": "RE",
+      "boardingSpeed": 80
+    },
+    {
+      "id": 3,
+      "arrivalTime": 204,
+      "departureTime": 220,
+      "platform": 1,
+      "wagonCount": 12,
+      "passengerCount": 600,
+      "powerType": "ELOC",
+      "operationType": "IC",
+      "boardingSpeed": 120
+    },
+    {
+      "id": 4,
+      "arrivalTime": 210,
+      "departureTime": 214,
+      "platform": 2,
+      "wagonCount": 4,
+      "passengerCount": 40,
+      "powerType": "DMU",
+      "operationType": "R",
+      "boardingSpeed": 80
+    },
+    {
+      "id": 5,
+      "arrivalTime": 240,
+      "departureTime": 244,
+      "platform": 1,
+      "wagonCount": 6,
+      "passengerCount": 200,
+      "powerType": "EMU",
+      "operationType": "R",
+      "boardingSpeed": 80
+    }
+  ]
+}
