@@ -1,23 +1,34 @@
 #include "boardingChecklist.h"
 
 #include <cassert>
+#include <algorithm>
+#include <iterator>
 
 namespace tss
 {
-	BoardChecklistItemId BoardChecklist::addBoardRequirement(const std::string& aRequirement)
+	void BoardingChecklist::addBoardRequirement(const PassengerState aRequirement)
 	{
-		static BoardChecklistItemId id = 1;
-
-		BoardChecklistItem item{ .id = id, .name = aRequirement };
-		checklistItems[id] = item;
-		id++;
-		return item.id;
+		checklistItems.insert(aRequirement);
 	}
 
-	void BoardChecklist::fulfillRequirementForPassenger(const BoardChecklistItemId aRequirementId, const PassengerId aPassengerId)
+	void BoardingChecklist::fulfillRequirementForPassenger(const PassengerState aRequirementName, const IdType aPassengerId)
 	{
-		assert(checklistItems.contains(aRequirementId));
+		assert(checklistItems.contains(aRequirementName));
+		checklist[aPassengerId].insert(aRequirementName);
+	}
 
-		checklist[aPassengerId].insert(aRequirementId);
+	std::unordered_set<PassengerState> BoardingChecklist::getUnfulfilledRequirementsForPassenger(const IdType aPassengerId) const
+	{
+		auto fulfilled = checklist.at(aPassengerId);
+		std::unordered_set<PassengerState> unfulfilled;
+
+		std::set_difference(
+			checklistItems.begin(), 
+			checklistItems.end(), 
+			fulfilled.begin(), 
+			fulfilled.end(), 
+			std::inserter(unfulfilled, unfulfilled.end()));
+
+		return unfulfilled;
 	}
 }

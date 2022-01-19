@@ -2,6 +2,7 @@
 #include "clock.h"
 
 #include <vector>
+#include <memory>
 
 namespace tss
 {

@@ -3,6 +3,7 @@
   "trains": [
     {
       "id": 1,
+      "name": "RB10341",
       "arrivalTime": 180,
       "departureTime": 184,
       "platform": 1,
@@ -14,6 +15,7 @@
     },
     {
       "id": 2,
+      "name": "RE4254",
       "arrivalTime": 180,
       "departureTime": 184,
       "platform": 2,
@@ -25,6 +27,7 @@
     },
     {
       "id": 3,
+      "name": "IC2139",
       "arrivalTime": 204,
       "departureTime": 220,
       "platform": 1,
@@ -36,6 +39,7 @@
     },
     {
       "id": 4,
+      "name": "RB10342",
       "arrivalTime": 210,
       "departureTime": 214,
       "platform": 2,
@@ -47,6 +51,7 @@
     },
     {
       "id": 5,
+      "name": "RB41123",
       "arrivalTime": 240,
       "departureTime": 244,
       "platform": 1,

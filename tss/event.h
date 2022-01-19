@@ -1,25 +1,53 @@
 #pragma once
 
-#include <unordered_map>
-#include <string_view>
+#include "id.h"
+
 #include <functional>
-#include <list>
+#include <unordered_map>
 
 namespace tss
 {
-	class Event
+	template<typename E>
+	class EventEmitter
 	{
 	public:
-		virtual std::string_view getType() const = 0;
-	};
-
-	class EventBus
-	{
-	public:
-		void AddEventListener(const Event& aEvent, std::function<void(const Event&)> aEventHandler);
-		void RaiseEvent(const Event& aEvent);
+		IdType addEventHandler(std::function<bool(const E&)> aEventHandler);
+		void removeEventHandler(const IdType aEventHandlerId);
+		void emit(const E& aEvent);
 		
 	private:
-		std::unordered_map<std::string_view, std::list<std::function<void(const Event&)>>> eventHandlers;
+		std::unordered_map<IdType, std::function<bool(const E&)>> eventHandlers;
+		IdType id = 1;
+
+		IdType generateId();
 	};
+
+	template<typename E>
+	inline IdType EventEmitter<E>::addEventHandler(std::function<bool(const E&)> aEventHandler)
+	{
+		const IdType newId = generateId();
+		eventHandlers[newId] = aEventHandler;
+		return newId;
+	}
+
+	template<typename E>
+	inline void EventEmitter<E>::removeEventHandler(const IdType aEventHandlerId)
+	{
+		eventHandlers.erase(aEventHandlerId);
+	}
+
+	template<typename E>
+	inline void EventEmitter<E>::emit(const E& aEvent)
+	{
+		for (const auto& handler : eventHandlers)
+		{
+			handler(aEvent);
+		}
+	}
+
+	template<typename E>
+	inline IdType EventEmitter<E>::generateId()
+	{
+		return id++;
+	}
 }

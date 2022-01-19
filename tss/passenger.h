@@ -1,28 +1,15 @@
 #pragma once
 
-#include "stage.h"
 #include "train.h"
-#include "clock.h"
 #include "activity.h"
+#include "id.h"
 
 #include <unordered_map>
 
 namespace tss
 {
-	class StageManager;
 	class Event;
-
-	using PassengerId = unsigned long int;
-
-	enum class PassengerState
-	{
-		Spawned,
-		WaitingForNextStage,
-		InQueue,
-		FreeActivity,
-		OnPlatform,
-		Boarded,
-	};
+	class Station;
 
 	enum class PassengerClass
 	{
@@ -36,38 +23,41 @@ namespace tss
 	class Passenger
 	{
 	public:
-		PassengerId id;
+		IdType id;
 
 		Passenger(
 			const TimeUnit aSpawnTime, 
-			const TrainId aTargetTrain = 0, 
-			const PassengerClass aPassengerClass = PassengerClass::HardSeat, 
-			const uint8_t aHappyness = 100);
+			const IdType aTargetTrain = 0,
+			const PassengerClass aPassengerClass = PassengerClass::HardSeat,
+			const bool aHasTicket = true);
 
-		void Update(TimeUnit aTime, const StageManager& aStageManager);
-
+		void update(Station* aStation);
 
 	private:
 
 		TimeUnit spawnTime;
 
-		StageId stage;
-		std::unordered_map<StageId, TimeUnit> stageTime;
-		TimeUnit stageEnterTime;
+		IdType activity;
 
-		ActivityId activity;
+		uint8_t morality;
+		uint8_t careness;
+		uint8_t hurryness;
+		uint8_t mobility;
+		uint8_t age;
 
-		PassengerState state;
-		std::unordered_map<PassengerState, TimeUnit> stateTime;
+		float mood;
+		float frustration;
+		float hunger;
+		float thirst;
+		float toiletWill;
+		float health;
+		float entertainment;
 
 		PassengerClass passengerClass;
+		IdType targetTrain;
+		bool hasTicket;
 
-		TimeUnit nextActionTime;
+		void findNextActivity(Station* aStation);
 
-		TrainId targetTrain;
-
-		uint8_t happyness;
-
-		void onActivityFinished(const Event& aEvent);
 	};
 }

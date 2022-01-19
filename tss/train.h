@@ -2,6 +2,7 @@
 
 #include "clock.h"
 #include "passengerSpawner.h"
+#include "id.h"
 
 #include <rapidjson/document.h>
 #include <string_view>
@@ -10,8 +11,6 @@
 
 namespace tss
 {
-	using TrainId = unsigned int;
-	using PlatformId = unsigned int;
 
 	enum class PowerType
 	{
@@ -39,26 +38,15 @@ namespace tss
 
 	struct Train
 	{
-		TrainId id;
+		IdType id;
+		std::string_view name;
 		TimeUnit arrivalTime;
 		TimeUnit departureTime;
-		PlatformId platform;
+		IdType platform;
 		size_t wagonCount;
 		size_t passengerCount;
 		size_t boardingSpeed;
 		PowerType powerType;
 		OperationType operationType;
-	};
-
-	Train trainFromJson(const rapidjson::Value& aJsonValue);
-
-	class TrainPassengerSpawner : public PassengerSpawner
-	{
-	public:
-		TrainPassengerSpawner(const Train& aTrain);
-		virtual std::vector<Passenger> spawn(TimeUnit aTime) override;
-	private:
-		std::map<TimeUnit, size_t> passengerDist;
-		TrainId train;
 	};
 }

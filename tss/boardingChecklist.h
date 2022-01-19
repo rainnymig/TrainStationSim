@@ -1,28 +1,21 @@
 #pragma once
 
-#include "passenger.h"
+#include "id.h"
+#include "passengerState.h"
 
-#include <string>
 #include <unordered_map>
-#include <set>
+#include <unordered_set>
 
 namespace tss
 {
-	using BoardChecklistItemId = uint8_t;
-
-	struct BoardChecklistItem
-	{
-		BoardChecklistItemId id;
-		std::string name;
-	};
-
-	class BoardChecklist
+	class BoardingChecklist
 	{
 	public:
-		BoardChecklistItemId addBoardRequirement(const std::string& aRequirement);
-		void fulfillRequirementForPassenger(const BoardChecklistItemId aRequirementId, const PassengerId aPassengerId);
+		void addBoardRequirement(const PassengerState aRequirement);
+		void fulfillRequirementForPassenger(const PassengerState aRequirementId, const IdType aPassengerId);
+		std::unordered_set<PassengerState> getUnfulfilledRequirementsForPassenger(const IdType aPassengerId) const;
 	private:
-		std::unordered_map<BoardChecklistItemId, BoardChecklistItem> checklistItems;
-		std::unordered_map<PassengerId, std::set<BoardChecklistItemId>> checklist;
+		std::unordered_set<PassengerState> checklistItems;
+		std::unordered_map<IdType, std::unordered_set<PassengerState>> checklist;
 	};
 }
