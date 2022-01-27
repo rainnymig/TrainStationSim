@@ -9,7 +9,7 @@
 #include <string_view>
 #include <functional>
 #include <unordered_map>
-#include <set>
+#include <deque>
 
 namespace tss
 {
@@ -33,7 +33,7 @@ namespace tss
 
 	struct ActivityProcess
 	{
-		size_t peoplePerMinute;
+		float peoplePerMinute;
 		size_t maxQueueLength;
 	};
 
@@ -46,11 +46,11 @@ namespace tss
 	{
 	public:
 		IdType id;
-		ActivityData* data;
-		ActivityProcess* process;
+		const ActivityData* data;
+		const ActivityProcess* process;
 
 		Activity();
-		Activity(ActivityData* aData, ActivityProcess* aProcess, const IdType aConnectedSpace = NULL_ID);
+		Activity(const ActivityData* aData, const ActivityProcess* aProcess, const IdType aConnectedSpace = NULL_ID);
 		Activity(const Activity&) = default;
 		Activity(Activity&&) = default;
 		Activity& operator=(const Activity&) = default;
@@ -63,12 +63,15 @@ namespace tss
 
 		void setConnectedSpace(const IdType aNextSpace);
 		IdType getConnectedSpace() const;
-		bool addPeople(IdType aPassenger, std::function<bool(const ActivityEvent&)> aActivityUpdateHandler);
+		bool canEnter(const Passenger& aPassenger, const Station& aStation) const;
+		void addPeople(IdType aPassenger, std::function<bool(const ActivityEvent&)> aActivityUpdateHandler);
 		void removePeople(IdType aPassenger);
+		void processPeopleInTheFront(size_t aCount);
 
 	protected:
 		EventEmitter<ActivityEvent> eventEmitter;
 		std::unordered_map<IdType, IdType> passengerHandlerMap;
+		std::deque<IdType> passengerQueue;
 		IdType connectedSpace;
 	};
 }

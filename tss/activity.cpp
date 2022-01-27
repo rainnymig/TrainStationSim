@@ -7,7 +7,7 @@ namespace tss
 	{
 	}
 
-	Activity::Activity(ActivityData* aData, ActivityProcess* aProcess, const IdType aConnectedSpace)
+	Activity::Activity(const ActivityData* aData, const ActivityProcess* aProcess, const IdType aConnectedSpace)
 		: data(aData)
 		, process(aProcess)
 		, connectedSpace(aConnectedSpace)
@@ -22,6 +22,7 @@ namespace tss
 
 	void Activity::update(const Station& aStation)
 	{
+		processPeopleInTheFront(process->peoplePerMinute);
 	}
 
 	size_t Activity::getPeopleCount() const
@@ -39,18 +40,21 @@ namespace tss
 		return connectedSpace;
 	}
 
-	bool Activity::addPeople(IdType aPassenger, std::function<bool(const ActivityEvent&)> aActivityUpdateHandler)
+	bool Activity::canEnter(const Passenger& aPassenger, const Station& aStation) const
+	{
+		return passengerQueue.size() < process->maxQueueLength && data->canEnter(aPassenger, aStation);
+	}
+
+	void Activity::addPeople(IdType aPassenger, std::function<bool(const ActivityEvent&)> aActivityUpdateHandler)
 	{
 		if (passengerHandlerMap.contains(aPassenger))
 		{
-			return true;
+			return;
 		}
 
 		const IdType handlerId = eventEmitter.addEventHandler(aActivityUpdateHandler);
-
 		passengerHandlerMap[aPassenger] = handlerId;
-
-		return false;
+		passengerQueue.emplace_back(aPassenger);
 	}
 
 	void Activity::removePeople(IdType aPassenger)
@@ -62,5 +66,22 @@ namespace tss
 
 		eventEmitter.removeEventHandler(passengerHandlerMap.at(aPassenger));
 		passengerHandlerMap.erase(aPassenger);
+		std::erase(passengerQueue, aPassenger);
+	}
+
+	void Activity::processPeopleInTheFront(size_t aCount)
+	{
+		if (passengerQueue.empty())
+		{
+			return;
+		}
+		size_t peopleCountToRemove = std::min(passengerQueue.size(), aCount);
+		while (peopleCountToRemove-- > 0)
+		{
+			IdType people = passengerQueue.front();
+			eventEmitter.removeEventHandler(passengerHandlerMap.at(people));
+			passengerHandlerMap.erase(people);
+			passengerQueue.pop_front();
+		}
 	}
 }

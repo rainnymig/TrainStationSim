@@ -1,6 +1,8 @@
 #include "passenger.h"
 
 #include "boardingChecklist.h"
+#include "space.h"
+#include "platform.h"
 
 #include <set>
 
@@ -30,6 +32,26 @@ namespace tss
 		, health(100)
 		, entertainment(20)
 	{
+	}
+
+	bool Passenger::hasActivity() const
+	{
+		return activity != NULL_ID;
+	}
+
+	void Passenger::update(Station* aStation)
+	{
+		if (hasActivity())
+		{
+			return;
+		}
+
+		findNextActivity(aStation);
+	}
+
+	void Passenger::findNextActivity(Station* aStation)
+	{
+		
 	}
 
 }

@@ -10,6 +10,7 @@ namespace tss
 {
 	class Event;
 	class Station;
+	class Space;
 
 	enum class PassengerClass
 	{
@@ -31,6 +32,8 @@ namespace tss
 			const PassengerClass aPassengerClass = PassengerClass::HardSeat,
 			const bool aHasTicket = true);
 
+		bool hasActivity() const;
+
 		void update(Station* aStation);
 
 	private:
@@ -38,6 +41,7 @@ namespace tss
 		TimeUnit spawnTime;
 
 		IdType activity;
+		Space* currentSpace;
 
 		uint8_t morality;
 		uint8_t careness;

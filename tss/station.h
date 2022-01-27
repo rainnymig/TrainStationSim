@@ -3,6 +3,7 @@
 #include "clock.h"
 #include "trainManager.h"
 #include "boardingChecklist.h"
+#include "spaceLayout.h"
 
 #include <memory>
 
@@ -14,7 +15,6 @@ namespace tss
 		Clock clock;
 		TrainManager trainManager;
 		BoardingChecklist boardingChecklist;
-
-		
+		SpaceLayout stationLayout;
 	};
 }

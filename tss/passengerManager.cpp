@@ -12,6 +12,15 @@ namespace tss
 		spawners.emplace_back(std::move(aSpawner));
 	}
 
+	void PassengerManager::addPassengerSpawners(std::vector<std::unique_ptr<PassengerSpawner>>&& aSpawners)
+	{
+		spawners.insert(
+			spawners.end(),
+			std::make_move_iterator(aSpawners.begin()),
+			std::make_move_iterator(aSpawners.end())
+		);
+	}
+
 	void PassengerManager::update(Station& aStation)
 	{
 		updateSpawnPassengers(aStation);

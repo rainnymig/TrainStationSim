@@ -2,6 +2,7 @@
 
 #include "train.h"
 #include "passengerManager.h"
+#include "passengerSpawner.h"
 #include "trainPassengerSpawner.h"
 
 #include <rapidjson/document.h>
@@ -30,7 +31,7 @@ namespace tss
 		return train;
 	}
 
-	void TrainManager::loadSchedule(const char* aScheduleFile, PassengerManager* aPassengerManager)
+	void TrainManager::loadSchedule(const char* aScheduleFile)
 	{
 		using namespace rapidjson;
 		FILE* fp = fopen(aScheduleFile, "rb");
@@ -54,11 +55,20 @@ namespace tss
 			[this](const auto& t) {
 				this->trains.emplace_back(trainFromJson(t));
 			});
+	}
 
-		for (const Train& train : trains)
-		{
-			aPassengerManager->addPassengerSpawner(std::make_unique<TrainPassengerSpawner>(train));
-		}
+	std::vector<std::unique_ptr<PassengerSpawner>> TrainManager::getSpawnersFromTrain() const
+	{
+		std::vector<std::unique_ptr<PassengerSpawner>> spawners;
+		std::transform(
+			std::begin(trains),
+			std::end(trains),
+			std::back_inserter(spawners),
+			[](const auto& train) {
+				return std::move(std::make_unique<TrainPassengerSpawner>(train));
+			}
+		);
+		return spawners;
 	}
 
 	TimeUnit TrainManager::getTimeToDeparture(const TimeUnit aTime, const IdType aTrainId) const

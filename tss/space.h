@@ -2,6 +2,7 @@
 
 #include "id.h"
 #include "passengerState.h"
+#include "activity.h"
 
 #include <vector>
 #include <memory>
@@ -10,8 +11,6 @@
 
 namespace tss
 {
-	class Activity;
-
 	enum class SpaceType
 	{
 		normal,
@@ -23,7 +22,7 @@ namespace tss
 	public:
 		Space(IdType aId);
 
-		constexpr IdType getId() const;
+		IdType getId() const;
 
 		virtual constexpr SpaceType getType() const;
 

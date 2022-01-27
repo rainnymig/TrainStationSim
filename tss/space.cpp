@@ -12,7 +12,7 @@ namespace tss
 		: id(aId)
 	{}
 
-	constexpr IdType Space::getId() const
+	IdType Space::getId() const
 	{
 		return id;
 	}
